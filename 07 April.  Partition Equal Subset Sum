@@ -1,0 +1,43 @@
+/*
+    Partition Equal Subset Sum
+    ---------------------------
+    Problem:
+    Given a non-empty array containing only positive integers, determine if the array can be partitioned into 
+    two subsets such that the sum of elements in both subsets is equal.
+
+    Example:
+    Input: [1, 5, 11, 5]
+    Output: true
+    Explanation: The array can be partitioned as [1, 5, 5] and [11].
+
+    Approach:
+    - Use recursion + memoization (top-down DP)
+    - The problem is reduced to finding if there's a subset whose sum is equal to half of the total sum.
+    - If total sum is odd, return false.
+    - Otherwise, try to reach the target sum using a subset of the array.
+
+    Time Complexity: O(n * target)
+    Space Complexity: O(n * target)
+*/
+
+
+class Solution {
+public:
+    bool canPartition(vector<int>& nums) {
+        int totalSum = 0;
+        for (int num : nums) totalSum += num;
+
+        if (totalSum % 2 != 0) return false;
+
+        int targetSum = totalSum / 2;
+        vector<bool> dp(targetSum + 1, false);
+        dp[0] = true;
+        for (int num : nums) {
+            for (int currSum = targetSum; currSum >= num; --currSum) {
+                dp[currSum] = dp[currSum] || dp[currSum - num];
+                if (dp[targetSum]) return true;
+            }
+        }
+        return dp[targetSum];
+    }
+};
